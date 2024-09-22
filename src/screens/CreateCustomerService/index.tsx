@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 
 export function CreateCustomerService() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Modal screen</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

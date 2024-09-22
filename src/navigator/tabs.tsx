@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Modal } from '../components';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as Screens from '../screens';
@@ -50,6 +50,7 @@ export function Tabs() {
                 {...props}
                 onPress={openModal}
                 style={styles.TabCreateCustomerService}
+                activeOpacity={1}
               >
                 <FontAwesome name="calendar-plus-o" size={24} color="#539DF3" />
               </TouchableOpacity>

@@ -1,11 +1,11 @@
-import { View, Text } from 'react-native';
+import { SafeAreaView, Text } from 'react-native';
 
 export function Home() {
 
 
     return (
-        <View>
+        <SafeAreaView>
             <Text>Home</Text>
-        </View>
+        </SafeAreaView>
     )
 }
