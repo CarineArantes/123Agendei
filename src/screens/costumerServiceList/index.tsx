@@ -1,22 +1,41 @@
+import { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import {
     Button,
     ButtonText,
 } from "@gluestack-ui/themed"
+import {
+    useCostumerServiceDatabase,
+    CostumerServiceDatabase
+} from '../../database/useProductDatabase';
 
-import { Toast } from 'toastify-react-native';
 
 export function CostumerServiceList() {
-    const onSubmit = () => {
-        // create(data);
-        Toast.success('Cadastro realizado com sucesso')
-    };
+    const costumerServiceDatabase = useCostumerServiceDatabase();
+
+    const [list, setList]
+        = useState<any>([]);
+
+    const fetchCostumerServiceList = useCallback(async () => {
+        const costumerServiceList = await costumerServiceDatabase.findByDate(
+            new Date().toISOString().split('T')[0]
+        );
+        setList(costumerServiceList);
+    }, []);
+    useEffect(() => {
+        fetchCostumerServiceList();
+    }, []);
+
     return (
         <SafeAreaView>
-            <Text>CostumerServiceList</Text>
-            <Button>
-                <ButtonText onPress={()=>{onSubmit()}}>Hello World</ButtonText>
-            </Button>
+            <Button onPress={() => fetchCostumerServiceList()}></Button>
+            {list.map((costumerService: CostumerServiceDatabase) => {
+                return (
+                    <Text key={costumerService.id}>
+                        {costumerService.clientName}
+                    </Text>
+                )
+            })}
         </SafeAreaView>
     );
 }

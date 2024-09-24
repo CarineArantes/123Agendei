@@ -11,8 +11,15 @@ import {
     useCostumerServiceDatabase,
     CostumerServiceDatabase
 } from '../../database/useProductDatabase';
+import ToastManager, { Toast } from 'toastify-react-native'
+import { Dimensions } from 'react-native';
+
 
 export function CostumerServiceCreate() {
+    
+    const { width, height } = Dimensions.get('window');
+    const costumerServiceDatabase = useCostumerServiceDatabase()
+
     const {
         control,
         handleSubmit,
@@ -25,11 +32,12 @@ export function CostumerServiceCreate() {
 
 
     const onSubmit = (data: Form) => {
-        // create(data);
+        create(data);
     };
 
+
+
     async function create(data: Form) {
-        const costumerServiceDatabase = useCostumerServiceDatabase()
         try {
             const response = await costumerServiceDatabase.create({
                 clientName: data.clientName,
@@ -39,8 +47,10 @@ export function CostumerServiceCreate() {
                 serviceType: data.serviceType
             })
             if (response?.status === 'success') {
-                console.log('Cadastro realizado com sucesso')
+                Toast.success(response.message, 'top');
+                return;
             }
+            Toast.error(response.message, 'top');
         } catch (error) {
             console.log(error)
         }
@@ -49,6 +59,10 @@ export function CostumerServiceCreate() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <ToastManager
+                position="top"
+                width={width - 30}
+            />
             <View style={styles.form}>
                 <Controller
                     control={control}

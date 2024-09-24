@@ -7,7 +7,11 @@ export const FormSchema = z.object({
     clientPhone: z.string()
         .nonempty(MessageUserKeys.CLIENT_PHONE_REQUIRED),
     schedulingDate: z.string()
-        .nonempty(MessageUserKeys.SCHEDULING_DATE_REQUIRED),
+        .nonempty(MessageUserKeys.SCHEDULING_DATE_REQUIRED)
+        .transform(value => {
+            const [day, month, year] = value.split('/')
+            return `${year}-${month}-${day}`
+        }),
     schedulingTime: z.string()
         .nonempty(MessageUserKeys.SCHEDULING_TIME_REQUIRED),
     attendant: z.string(),

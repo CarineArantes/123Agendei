@@ -1,4 +1,5 @@
 import { useSQLiteContext } from "expo-sqlite"
+import { MessageUserKeys } from '@keys'
 
 export type CostumerServiceDatabase = {
   id: number
@@ -26,12 +27,18 @@ export function useCostumerServiceDatabase() {
       })
 
       const insertedRowId = result.lastInsertRowId.toLocaleString()
-      if (insertedRowId){
-        return { status: 'success'}
+      if (insertedRowId) {
+        return {
+          status: 'success',
+          message: MessageUserKeys.SCHEDULING_CREATED
+        }
       }
-     return {status: 'error'}
+      throw new Error(MessageUserKeys.SCHEDULING_ERROR)
     } catch (error) {
-      throw error
+      return {
+        status: 'error',
+        message: MessageUserKeys.SCHEDULING_ERROR
+      }
     } finally {
       await statement.finalizeAsync()
     }
@@ -42,7 +49,7 @@ export function useCostumerServiceDatabase() {
     const statement = await database.prepareAsync(
       "UPDATE products SET clientName = $clientName, clientPhone = $clientPhone, serviceType = $serviceType, schedulingDate = $schedulingDate, schedulingTime = $schedulingTime WHERE id = $id"
     );
-  
+
     try {
       // Execute the statement with the data provided
       await statement.executeAsync({
@@ -84,5 +91,19 @@ export function useCostumerServiceDatabase() {
     }
   }
 
-  return { create, update, remove, show }
+  async function findByDate(schedulingDate: string) {
+    try {
+      const query = "SELECT * FROM costumerService WHERE schedulingDate = ? ORDER BY schedulingTime ASC";
+      const response = await database.getAllAsync<CostumerServiceDatabase[]>(query, [schedulingDate]);
+      return response;
+    
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+  
+
+
+  return { create, update, remove, show, findByDate }
 }
