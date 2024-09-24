@@ -45,7 +45,7 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
                 Toast.success(response.message, 'top');
                 setTimeout(() => {
                     callback();
-                }, 2000);
+                }, 2500);
                 return;
             }
             Toast.error(response.message, 'top');
