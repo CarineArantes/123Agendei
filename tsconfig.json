@@ -9,6 +9,7 @@
       "@screens": ["./src/screens"],
       "@services": ["./src/services"],
       "@app": ["./src/app"],
+      "@keys": ["./src/keys"],
     }
   },
   "include": [
