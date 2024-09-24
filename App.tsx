@@ -1,15 +1,19 @@
 import { config } from '@gluestack-ui/config';
-import { Box, GluestackUIProvider, Text } from '@gluestack-ui/themed';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { TabRoutersLayout } from '@app'
 import { NavigationContainer } from '@react-navigation/native';
+import { SQLiteProvider } from "expo-sqlite"
+import { initializeDatabase } from './src/database/initializeDatabase';
 
 
 export default function App() {
   return (
-    <GluestackUIProvider config={config}>
-      <NavigationContainer>
-        <TabRoutersLayout />
-      </NavigationContainer>
-    </GluestackUIProvider>
+    <SQLiteProvider databaseName="123Agendei.db" onInit={initializeDatabase}>
+      <GluestackUIProvider config={config}>
+        <NavigationContainer>
+          <TabRoutersLayout />
+        </NavigationContainer>
+      </GluestackUIProvider>
+    </SQLiteProvider>
   );
 }

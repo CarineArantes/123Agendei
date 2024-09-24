@@ -10,6 +10,7 @@
       "@services": ["./src/services"],
       "@app": ["./src/app"],
       "@keys": ["./src/keys"],
+      "@database":["./src/database"],
     }
   },
   "include": [

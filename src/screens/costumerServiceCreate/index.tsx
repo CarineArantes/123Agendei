@@ -7,6 +7,10 @@ import {
     Form,
     defaultFormValues
 } from './schema';
+import {
+    useCostumerServiceDatabase,
+    CostumerServiceDatabase
+} from '../../database/useProductDatabase';
 
 export function CostumerServiceCreate() {
     const {
@@ -19,10 +23,29 @@ export function CostumerServiceCreate() {
         defaultValues: defaultFormValues
     });
 
-    const onSubmit = (data: any) => {
-        // Simulate form submission
-        console.log('Submitted Data:', data);
+
+    const onSubmit = (data: Form) => {
+        // create(data);
     };
+
+    async function create(data: Form) {
+        const costumerServiceDatabase = useCostumerServiceDatabase()
+        try {
+            const response = await costumerServiceDatabase.create({
+                clientName: data.clientName,
+                clientPhone: data.clientPhone,
+                schedulingDate: data.schedulingDate,
+                schedulingTime: data.schedulingTime,
+                serviceType: data.serviceType
+            })
+            if (response?.status === 'success') {
+                console.log('Cadastro realizado com sucesso')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -116,10 +139,10 @@ const styles = StyleSheet.create({
     },
     form: {
         flex: 1,
-        alignItems: 'stretch', 
+        alignItems: 'stretch',
     },
     input: {
-        width: '100%', 
-        marginBottom: 16, 
+        width: '100%',
+        marginBottom: 16,
     },
 });

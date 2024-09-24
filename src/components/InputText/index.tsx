@@ -27,11 +27,9 @@ export const InputText: React.FC<InputTextProps> = ({
         onBlur={onBlur}
         value={value}
       />
-      {hasError || legend &&
-        <Text style={hasError && styles.errorText}>
-          {hasError ? errorMessage : legend}
-        </Text>
-      }
+      <Text style={hasError && styles.errorText}>
+        {errorMessage}
+      </Text>
     </View>
   );
 };
