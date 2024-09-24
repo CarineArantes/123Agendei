@@ -1,36 +1,32 @@
-import { View, Button, ScrollView } from 'react-native';
+import { View, Button, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { InputText, DatePicker, TimePicker } from '@components';
 import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-    FormSchema,
-    Form,
-    defaultFormValues
-} from './schema';
+import { FormSchema, Form, defaultFormValues } from './schema';
 import { useCostumerServiceDatabase } from '../../database/useCostumerServiceDatabase';
 import ToastManager, { Toast } from 'toastify-react-native';
 import { Dimensions } from 'react-native';
 
 export function CostumerServiceCreate(props: { callback: () => void; }) {
-
     const { callback } = props;
     const { width } = Dimensions.get('window');
     const costumerServiceDatabase = useCostumerServiceDatabase();
 
     const {
-        control, handleSubmit, setValue, formState: { errors }
+        control,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors, isValid }
     } = useForm<Form>({
         resolver: zodResolver(FormSchema),
         defaultValues: defaultFormValues
     });
 
-
     const onSubmit = (data: Form) => {
         create(data);
     };
-
-
 
     async function create(data: Form) {
         try {
@@ -54,7 +50,6 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
         }
     }
 
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <ToastManager
@@ -66,30 +61,33 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <InputText
-                            style={styles.input} // Adicionando estilo
+                            style={styles.input}
                             placeholder="Nome do cliente"
                             errorMessage={errors.clientName?.message ?? ''}
-                            onChangeText={onChange} // Atualiza o valor do campo
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             legend=' '
-                            value={value} // Mantém o valor controlado
+                            value={value}
                         />
                     )}
                     name="clientName" />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <InputText
-                            style={styles.input} // Adicionando estilo
+                            style={styles.input}
+                            mask={'+55 (99) 99999-9999'}
                             placeholder="Telefone do cliente"
                             errorMessage={errors.clientPhone?.message ?? ''}
                             legend=' '
-                            onChangeText={onChange} // Atualiza o valor do campo
+                            onChangeText={onChange}
                             onBlur={onBlur}
-                            value={value} // Mantém o valor controlado
+                            value={value}
                         />
                     )}
                     name="clientPhone" />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -97,12 +95,13 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
                             placeholder="Data"
                             errorMessage={errors.schedulingDate?.message ?? ''}
                             legend=' '
-                            value={value || ''} // Passa o valor atual ou uma string vazia
+                            value={value || ''}
                             onChangeText={(text: string) => {
-                                onChange(text); // Atualiza o valor do campo
+                                onChange(text);
                             }} />
                     )}
                     name="schedulingDate" />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -110,32 +109,42 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
                             placeholder="Hora"
                             errorMessage={errors.schedulingTime?.message ?? ''}
                             legend=' '
-                            value={value || ''} // Passa o valor atual ou uma string vazia
+                            value={value || ''}
                             onChangeText={(text: string) => {
-                                onChange(text); // Atualiza o valor do campo
+                                onChange(text);
                             }} />
                     )}
                     name="schedulingTime" />
+
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <InputText
-                            style={styles.input} // Adicionando estilo
+                            style={styles.input}
                             placeholder="Tipo de serviço"
                             errorMessage={errors.serviceType?.message ?? ''}
                             legend=' '
-                            onChangeText={onChange} // Atualiza o valor do campo
+                            onChangeText={onChange}
                             onBlur={onBlur}
-                            value={value} // Mantém o valor controlado
+                            value={value}
                         />
                     )}
                     name="serviceType" />
-                <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit(onSubmit)}>
+                    <Text style={styles.buttonText}>Enviar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.simpleButton]}
+                    onPress={() => reset()}
+                >
+                    <Text style={styles.simpleButtonText}>Apagar Campos</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -151,4 +160,26 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 16,
     },
+    submitButton: {
+        backgroundColor: '#007BFF', // Azul
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    buttonText: {
+        color: '#FFFFFF', // Texto branco
+        fontWeight: 'bold',
+    },
+    simpleButton: {
+        backgroundColor: '#FFFFFF', // Fundo branco
+        borderColor: '#FFD700', // Cor da borda amarela
+        borderWidth: 2, // Largura da borda
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    simpleButtonText: {
+        color: '#FFD700', // Cor do texto amarelo
+    }
 });

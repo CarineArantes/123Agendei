@@ -12,4 +12,5 @@ export enum MessageUserKeys {
     SCHEDULING_UPDATE_ERROR = 'Erro ao atualizar agendamento',
     SCHEDULING_DELETED = 'Agendamento deletado com sucesso',
     SCHEDULING_DELETE_ERROR = 'Erro ao deletar agendamento',
+    CLIENT_PHONE_INVALID = 'Telefone inválido'
 }
