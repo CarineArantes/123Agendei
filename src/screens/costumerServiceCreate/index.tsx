@@ -13,6 +13,7 @@ import ToastManager, { Toast } from 'toastify-react-native';
 import { Dimensions } from 'react-native';
 
 export function CostumerServiceCreate(props: { callback: () => void; }) {
+
     const { callback } = props;
     const { width } = Dimensions.get('window');
     const costumerServiceDatabase = useCostumerServiceDatabase();
@@ -41,11 +42,10 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
                 serviceType: data.serviceType
             });
             if (response?.status === 'success') {
-
-
-
-                callback();
                 Toast.success(response.message, 'top');
+                setTimeout(() => {
+                    callback();
+                }, 2000);
                 return;
             }
             Toast.error(response.message, 'top');
@@ -59,7 +59,8 @@ export function CostumerServiceCreate(props: { callback: () => void; }) {
         <ScrollView contentContainerStyle={styles.container}>
             <ToastManager
                 position="top"
-                width={width - 30} />
+                width={width - 30}
+            />
             <View style={styles.form}>
                 <Controller
                     control={control}
