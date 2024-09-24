@@ -7,29 +7,24 @@ import {
 import {
     useCostumerServiceDatabase,
     CostumerServiceDatabase
-} from '../../database/useProductDatabase';
-
+} from '../../database/useCostumerServiceDatabase';
+import { useConfig } from '../../contexts/config';
 
 export function CostumerServiceList() {
-    const costumerServiceDatabase = useCostumerServiceDatabase();
 
-    const [list, setList]
-        = useState<any>([]);
-
-    const fetchCostumerServiceList = useCallback(async () => {
-        const costumerServiceList = await costumerServiceDatabase.findByDate(
-            new Date().toISOString().split('T')[0]
-        );
-        setList(costumerServiceList);
-    }, []);
-    useEffect(() => {
-        fetchCostumerServiceList();
-    }, []);
+    const {
+        costumerServiceList,
+        onReloadCostumerServiceList
+    } = useConfig();
 
     return (
         <SafeAreaView>
-            <Button onPress={() => fetchCostumerServiceList()}></Button>
-            {list.map((costumerService: CostumerServiceDatabase) => {
+            <Button
+                onPress={onReloadCostumerServiceList}   
+            >
+                
+            </Button>
+            {costumerServiceList.map((costumerService: CostumerServiceDatabase) => {
                 return (
                     <Text key={costumerService.id}>
                         {costumerService.clientName}

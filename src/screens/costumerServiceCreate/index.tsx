@@ -1,5 +1,6 @@
-import { View, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Button, ScrollView } from 'react-native';
 import { InputText, DatePicker, TimePicker } from '@components';
+import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -7,24 +8,17 @@ import {
     Form,
     defaultFormValues
 } from './schema';
-import {
-    useCostumerServiceDatabase,
-    CostumerServiceDatabase
-} from '../../database/useProductDatabase';
-import ToastManager, { Toast } from 'toastify-react-native'
+import { useCostumerServiceDatabase } from '../../database/useCostumerServiceDatabase';
+import ToastManager, { Toast } from 'toastify-react-native';
 import { Dimensions } from 'react-native';
 
-
-export function CostumerServiceCreate() {
-    
-    const { width, height } = Dimensions.get('window');
-    const costumerServiceDatabase = useCostumerServiceDatabase()
+export function CostumerServiceCreate(props: { callback: () => void; }) {
+    const { callback } = props;
+    const { width } = Dimensions.get('window');
+    const costumerServiceDatabase = useCostumerServiceDatabase();
 
     const {
-        control,
-        handleSubmit,
-        setValue,
-        formState: { errors }
+        control, handleSubmit, setValue, formState: { errors }
     } = useForm<Form>({
         resolver: zodResolver(FormSchema),
         defaultValues: defaultFormValues
@@ -45,14 +39,18 @@ export function CostumerServiceCreate() {
                 schedulingDate: data.schedulingDate,
                 schedulingTime: data.schedulingTime,
                 serviceType: data.serviceType
-            })
+            });
             if (response?.status === 'success') {
+
+
+
+                callback();
                 Toast.success(response.message, 'top');
                 return;
             }
             Toast.error(response.message, 'top');
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -61,8 +59,7 @@ export function CostumerServiceCreate() {
         <ScrollView contentContainerStyle={styles.container}>
             <ToastManager
                 position="top"
-                width={width - 30}
-            />
+                width={width - 30} />
             <View style={styles.form}>
                 <Controller
                     control={control}
@@ -77,8 +74,7 @@ export function CostumerServiceCreate() {
                             value={value} // Mantém o valor controlado
                         />
                     )}
-                    name="clientName"
-                />
+                    name="clientName" />
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -92,8 +88,7 @@ export function CostumerServiceCreate() {
                             value={value} // Mantém o valor controlado
                         />
                     )}
-                    name="clientPhone"
-                />
+                    name="clientPhone" />
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -104,11 +99,9 @@ export function CostumerServiceCreate() {
                             value={value || ''} // Passa o valor atual ou uma string vazia
                             onChangeText={(text: string) => {
                                 onChange(text); // Atualiza o valor do campo
-                            }}
-                        />
+                            }} />
                     )}
-                    name="schedulingDate"
-                />
+                    name="schedulingDate" />
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -119,11 +112,9 @@ export function CostumerServiceCreate() {
                             value={value || ''} // Passa o valor atual ou uma string vazia
                             onChangeText={(text: string) => {
                                 onChange(text); // Atualiza o valor do campo
-                            }}
-                        />
+                            }} />
                     )}
-                    name="schedulingTime"
-                />
+                    name="schedulingTime" />
                 <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -137,13 +128,13 @@ export function CostumerServiceCreate() {
                             value={value} // Mantém o valor controlado
                         />
                     )}
-                    name="serviceType"
-                />
+                    name="serviceType" />
                 <Button title="Submit" onPress={handleSubmit(onSubmit)} />
             </View>
         </ScrollView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

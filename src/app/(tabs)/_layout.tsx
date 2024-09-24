@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home } from './home';
 import { CostumerServiceCreate } from '@screens';
 import { Modal } from '@components';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useConfig } from '../../contexts/config';
 
 enum ScreensKeys {
     Home = 'Atendimentos',
@@ -15,10 +16,17 @@ const Tab = createBottomTabNavigator();
 
 
 export function TabRoutersLayout() {
+
+    const { onReloadCostumerServiceList } = useConfig();
+
     const [isModalVisible, setModalVisible] = useState(false);
 
     const openModal = () => setModalVisible(true);
     const closeModal = () => setModalVisible(false);
+
+    useEffect(() => {
+        onReloadCostumerServiceList();
+    } , []);
 
     return (
         <>
@@ -71,7 +79,12 @@ export function TabRoutersLayout() {
                 animationType="slide"
                 onRequestClose={closeModal}
             >
-                <CostumerServiceCreate />
+                <CostumerServiceCreate
+                    callback={() => {
+                        onReloadCostumerServiceList();
+                        closeModal();
+                    }}
+                />
             </Modal>
         </>
 
