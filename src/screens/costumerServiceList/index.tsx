@@ -1,14 +1,17 @@
-import { SafeAreaView, Text, View, StyleSheet, ScrollView } from 'react-native';
 import {
-    useCostumerServiceDatabase,
-    CostumerServiceDatabase
-} from '../../database/useCostumerServiceDatabase';
+    SafeAreaView,
+    Text,
+    View,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity
+} from 'react-native';
 import { useConfig } from '../../contexts/config';
 
 export function CostumerServiceList() {
-
     const {
         costumerServiceList,
+        setCostumerServiceSelected
     } = useConfig();
 
     return (
@@ -19,7 +22,11 @@ export function CostumerServiceList() {
                 </Text>
                 {costumerServiceList.map((costumerService) => {
                     return (
-                        <View key={costumerService.id} style={styles.card}>
+                        <TouchableOpacity
+                            key={costumerService.id}
+                            style={styles.card} // Mantenha o estilo do card
+                            onPress={() => setCostumerServiceSelected(costumerService)} // Ação ao pressionar
+                        >
                             <View style={styles.cardHeader}>
                                 <View style={styles.clientInfo}>
                                     <Text
@@ -43,7 +50,7 @@ export function CostumerServiceList() {
                                     {costumerService.schedulingTime}
                                 </Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     );
                 })}
             </ScrollView>

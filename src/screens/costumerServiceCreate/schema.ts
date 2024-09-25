@@ -2,14 +2,17 @@ import { z } from 'zod';
 import { MessageUserKeys } from '@keys';
 
 export const FormSchema = z.object({
+    id: z.number().optional(),
     clientName: z.string()
         .nonempty(MessageUserKeys.CLIENT_NAME_REQUIRED),
     clientPhone: z.string()
         .nonempty(MessageUserKeys.CLIENT_PHONE_REQUIRED)
-        .refine(value =>
-            /^\+55 \(\d{2}\) \d{5}-\d{4}$/.test(value) ||
-            /^\+55 \(\d{2}\) \d{5}-\d{3}$/.test(value)
-            , MessageUserKeys.CLIENT_PHONE_INVALID),
+        .refine(value => {
+            const phone = value.replace("+55", "").replace(/\D/g, '')
+            return phone.length === 11 || phone.length === 10
+        }
+        , MessageUserKeys.CLIENT_PHONE_INVALID)
+        .transform(value => value.replace("+55", "").replace(/\D/g, '')),
     schedulingDate: z.string()
         .nonempty(MessageUserKeys.SCHEDULING_DATE_REQUIRED)
         .transform(value => {
@@ -18,7 +21,6 @@ export const FormSchema = z.object({
         }),
     schedulingTime: z.string()
         .nonempty(MessageUserKeys.SCHEDULING_TIME_REQUIRED),
-    attendant: z.string(),
     serviceType: z.string()
         .nonempty(MessageUserKeys.SERVICE_TYPE_REQUIRED)
 })
@@ -30,6 +32,5 @@ export const defaultFormValues: Form = {
     clientPhone: '',
     schedulingDate: '',
     schedulingTime: '',
-    attendant: '',
     serviceType: ''
 }

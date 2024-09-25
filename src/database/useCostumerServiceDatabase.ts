@@ -47,12 +47,12 @@ export function useCostumerServiceDatabase() {
   async function update(data: CostumerServiceDatabase) {
     // Prepare a statement with dynamic column updates
     const statement = await database.prepareAsync(
-      "UPDATE products SET clientName = $clientName, clientPhone = $clientPhone, serviceType = $serviceType, schedulingDate = $schedulingDate, schedulingTime = $schedulingTime WHERE id = $id"
+      "UPDATE costumerService SET clientName = $clientName, clientPhone = $clientPhone, serviceType = $serviceType, schedulingDate = $schedulingDate, schedulingTime = $schedulingTime WHERE id = $id"
     );
 
     try {
       // Execute the statement with the data provided
-      await statement.executeAsync({
+      const rep = await statement.executeAsync({
         $id: data.id,
         $clientName: data.clientName,
         $clientPhone: data.clientPhone,
@@ -60,9 +60,16 @@ export function useCostumerServiceDatabase() {
         $schedulingDate: data.schedulingDate,
         $schedulingTime: data.schedulingTime,
       });
+      console.log(rep);
+      return {
+        status: 'success',
+        message: MessageUserKeys.SCHEDULING_UPDATED
+      }
     } catch (error) {
-      // Handle any errors that occur during execution
-      throw error;
+      return {
+        status: 'error',
+        message: MessageUserKeys.SCHEDULING_ERROR
+      }
     } finally {
       // Finalize the statement to release resources
       await statement.finalizeAsync();
@@ -71,15 +78,23 @@ export function useCostumerServiceDatabase() {
 
   async function remove(id: number) {
     try {
-      await database.execAsync("DELETE FROM products WHERE id = " + id)
+      await database.execAsync("DELETE FROM costumerService WHERE id = " + id)
+      return {
+        status: 'success',
+        message: MessageUserKeys.SCHEDULING_DELETED
+      }
     } catch (error) {
-      throw error
+      console.error(error)
+      return {
+        status: 'error',
+        message: MessageUserKeys.SCHEDULING_DELETE_ERROR
+      }
     }
   }
 
   async function show(id: number) {
     try {
-      const query = "SELECT * FROM products WHERE id = ?"
+      const query = "SELECT * FROM costumerService WHERE id = ?"
 
       const response = await database.getFirstAsync<CostumerServiceDatabase>(query, [
         id,
@@ -94,15 +109,17 @@ export function useCostumerServiceDatabase() {
   async function findByDate(schedulingDate: string) {
     try {
       const query = "SELECT * FROM costumerService WHERE schedulingDate = ? ORDER BY schedulingTime ASC";
+      // const query = "SELECT * FROM costumerService ORDER BY schedulingTime ASC";
       const response = await database.getAllAsync<CostumerServiceDatabase[]>(query, [schedulingDate]);
+      console.log(response);
       return response;
-    
+
     } catch (error) {
       console.error(error);
       return [];
     }
   }
-  
+
 
 
   return { create, update, remove, show, findByDate }

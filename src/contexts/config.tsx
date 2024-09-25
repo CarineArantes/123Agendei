@@ -14,6 +14,8 @@ import {
 interface ConfigContextData {
   costumerServiceList: CostumerServiceDatabase[];
   onReloadCostumerServiceList: () => void;
+  costumerServiceSelected: CostumerServiceDatabase | null;
+  setCostumerServiceSelected: (costumerService: CostumerServiceDatabase | null) => void;
 }
 
 interface ConfigProviderProps {
@@ -24,6 +26,7 @@ const ConfigContext = createContext({} as ConfigContextData);
 
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
 
+  const [costumerServiceSelected, setCostumerServiceSelected] = useState<CostumerServiceDatabase | null>(null);
   const [costumerServiceList, setCostumerServiceList] = useState<any>([]);
 
   const costumerServiceDatabase = useCostumerServiceDatabase();
@@ -32,7 +35,6 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const costumerServiceList = await costumerServiceDatabase.findByDate(
       new Date().toISOString().split('T')[0]
     );
-    if (costumerServiceList.length === 0) return;
     setCostumerServiceList(costumerServiceList);
   }
 
@@ -40,7 +42,9 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
     <ConfigContext.Provider
       value={{
         costumerServiceList, 
-        onReloadCostumerServiceList 
+        onReloadCostumerServiceList,
+        costumerServiceSelected,
+        setCostumerServiceSelected
       }}
     >
       {children}

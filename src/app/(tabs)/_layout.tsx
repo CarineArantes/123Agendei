@@ -17,16 +17,32 @@ const Tab = createBottomTabNavigator();
 
 export function TabRoutersLayout() {
 
-    const { onReloadCostumerServiceList } = useConfig();
+    const {
+        onReloadCostumerServiceList,
+        costumerServiceSelected,
+        setCostumerServiceSelected
+    } = useConfig();
 
     const [isModalVisible, setModalVisible] = useState(false);
 
-    const openModal = () => setModalVisible(true);
-    const closeModal = () => setModalVisible(false);
+    const openModal = () => { 
+        setCostumerServiceSelected(null);
+        setModalVisible(true) 
+    };
+    const closeModal = () => { 
+        setCostumerServiceSelected(null);
+        setModalVisible(false)
+     };
 
     useEffect(() => {
         onReloadCostumerServiceList();
-    } , []);
+    }, []);
+
+    useEffect(() => {
+        if (costumerServiceSelected) {
+            setModalVisible(true)
+        }
+    }, [costumerServiceSelected]);
 
     return (
         <>
@@ -80,6 +96,7 @@ export function TabRoutersLayout() {
                 onRequestClose={closeModal}
             >
                 <CostumerServiceCreate
+                    costumerService={costumerServiceSelected}
                     callback={() => {
                         onReloadCostumerServiceList();
                         closeModal();

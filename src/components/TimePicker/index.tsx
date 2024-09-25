@@ -8,6 +8,7 @@ interface TimePickerProps {
   value: string;
   onChangeText: (text: string) => void; // Função para atualizar o valor
   legend?: string;
+  isDisabled?: boolean; // Adiciona a propriedade isDisabled
 }
 
 export const TimePicker: React.FC<TimePickerProps> = ({
@@ -16,9 +17,10 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   legend = '',
   value,
   onChangeText,
+  isDisabled = false, // Valor padrão é false
 }) => {
   const [show, setShow] = useState(false);
-  const [timeValue, setTimeValue] = useState<Date | undefined>(undefined); // Estado para a hora
+  const [timeValue, setTimeValue] = useState<Date | undefined>(undefined);
 
   const hasError = Boolean(errorMessage?.trim());
 
@@ -26,12 +28,12 @@ export const TimePicker: React.FC<TimePickerProps> = ({
     setShow(false);
     if (event.type === 'set') {
       if (selectedDate) {
-        setTimeValue(selectedDate); // Armazena a hora selecionada
+        setTimeValue(selectedDate);
         const timeString = selectedDate.toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
-        }); // Formatação da hora
-        onChangeText(timeString); // Atualiza o valor do campo
+        });
+        onChangeText(timeString);
       }
     }
   };
@@ -39,17 +41,25 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => setShow(true)}
-        style={[styles.input, hasError ? styles.errorInput : null]}>
+        onPress={() => !isDisabled && setShow(true)} // Permite abrir o TimePicker somente se não estiver desabilitado
+        style={[
+          styles.input,
+          hasError ? styles.errorInput : null,
+          isDisabled ? styles.disabledInput : null, // Aplica estilo se desabilitado
+        ]}
+        disabled={isDisabled} // Desabilita o TouchableOpacity se isDisabled for true
+      >
         {show ? (
           <DateTimePicker
-            value={timeValue ? timeValue : new Date()} // Usar o estado de hora ou a hora atual
+            value={timeValue ? timeValue : new Date()} // Usa o estado de hora ou a hora atual
             mode="time" // Modo para seleção de hora
             display="default"
             onChange={onChange}
           />
         ) : (
-          <Text style={{ color: value ? 'black' : '#aaa' }}>{value || placeholder}</Text>
+          <Text style={{ color: value ? 'black' : '#aaa' }}>
+            {value || placeholder}
+          </Text>
         )}
       </TouchableOpacity>
       <Text style={hasError && styles.errorText}>
@@ -62,7 +72,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
 const styles = StyleSheet.create({
   container: {
     margin: 10,
-    marginBottom: 16, 
+    marginBottom: 16,
   },
   input: {
     height: 50,
@@ -71,6 +81,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     justifyContent: 'center',
+  },
+  disabledInput: {
+    backgroundColor: '#f0f0f0', // Cor de fundo para indicar que está desabilitado
+    borderColor: '#ddd', // Altera a cor da borda
   },
   errorInput: {
     borderColor: 'red',

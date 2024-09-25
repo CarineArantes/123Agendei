@@ -6,11 +6,11 @@ export enum MessageUserKeys {
     SCHEDULING_DATE_REQUIRED = 'Data do agendamento é obrigatória',
     SCHEDULING_TIME_REQUIRED = 'Horário do agendamento é obrigatório',
     SERVICE_TYPE_REQUIRED = 'Tipo de serviço é obrigatório',
-    SCHEDULING_CREATED = 'Agendamento criado com sucesso',
-    SCHEDULING_ERROR = 'Erro ao criar agendamento',
-    SCHEDULING_UPDATED = 'Agendamento atualizado com sucesso',
-    SCHEDULING_UPDATE_ERROR = 'Erro ao atualizar agendamento',
-    SCHEDULING_DELETED = 'Agendamento deletado com sucesso',
-    SCHEDULING_DELETE_ERROR = 'Erro ao deletar agendamento',
+    SCHEDULING_CREATED = 'Cadastrado com sucesso',
+    SCHEDULING_ERROR = 'Erro ao cadastrar',
+    SCHEDULING_UPDATED = 'Atualizado com sucesso',
+    SCHEDULING_UPDATE_ERROR = 'Erro ao atualizar',
+    SCHEDULING_DELETED = 'Deletado com sucesso',
+    SCHEDULING_DELETE_ERROR = 'Erro ao deletar',
     CLIENT_PHONE_INVALID = 'Telefone inválido'
 }
