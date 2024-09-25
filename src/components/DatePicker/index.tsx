@@ -8,7 +8,7 @@ interface DatePickerProps {
   value: string;
   onChangeText: (text: string) => void;
   legend?: string; 
-  isDisabled?: boolean; // Adiciona a propriedade isDisabled
+  isDisabled?: boolean;
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
@@ -17,7 +17,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   errorMessage = '',
   value,
   onChangeText,
-  isDisabled = false, // Valor padrão é false
+  isDisabled = false,
 }) => {
   const [show, setShow] = useState(false);
   const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
@@ -26,25 +26,24 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   const onChange = (event: any, selectedDate?: Date) => {
     setShow(false);
-    if (event.type === 'set') {
-      if (selectedDate) {
-        setDateValue(selectedDate);
-        const dateString = selectedDate.toLocaleDateString();
-        onChangeText(dateString);
-      }
+    if (event.type === 'set' && selectedDate) {
+      setDateValue(selectedDate);
+      // Utiliza o idioma do sistema para formatar a data
+      const formattedDate = selectedDate.toLocaleDateString();
+      onChangeText(formattedDate);
     }
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => !isDisabled && setShow(true)} // Permite abrir o DateTimePicker somente se não estiver desabilitado
+        onPress={() => !isDisabled && setShow(true)}
         style={[
           styles.input, 
           hasError ? styles.errorInput : null, 
-          isDisabled ? styles.disabledInput : null // Aplica estilo se desabilitado
+          isDisabled ? styles.disabledInput : null
         ]}
-        disabled={isDisabled} // Desabilita o TouchableOpacity se isDisabled for true
+        disabled={isDisabled}
       >
         {show ? (
           <DateTimePicker
@@ -52,6 +51,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             mode="date"
             display="default"
             onChange={onChange}
+            locale='pt-BR'
           />
         ) : (
           <Text style={{ color: value ? 'black' : '#aaa' }}>
@@ -59,9 +59,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           </Text>
         )}
       </TouchableOpacity>
-      <Text style={hasError && styles.errorText}>
-        {errorMessage}
-      </Text>
+      {hasError && (
+        <Text style={styles.errorText}>
+          {errorMessage}
+        </Text>
+      )}
     </View>
   );
 };
@@ -80,8 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   disabledInput: {
-    backgroundColor: '#f0f0f0', // Cor de fundo para indicar que está desabilitado
-    borderColor: '#ddd', // Altera a cor da borda
+    backgroundColor: '#f0f0f0',
+    borderColor: '#ddd',
   },
   errorInput: {
     borderColor: 'red',

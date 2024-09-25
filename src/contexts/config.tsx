@@ -2,6 +2,7 @@ import {
   ReactNode,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -16,6 +17,7 @@ interface ConfigContextData {
   onReloadCostumerServiceList: () => void;
   costumerServiceSelected: CostumerServiceDatabase | null;
   setCostumerServiceSelected: (costumerService: CostumerServiceDatabase | null) => void;
+  setFilterDate: (date: string) => void;
 }
 
 interface ConfigProviderProps {
@@ -25,17 +27,19 @@ interface ConfigProviderProps {
 const ConfigContext = createContext({} as ConfigContextData);
 
 const ConfigProvider = ({ children }: ConfigProviderProps) => {
-
+  const today = new Date();
+  const [filterDate, setFilterDate] = useState(`${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`);
   const [costumerServiceSelected, setCostumerServiceSelected] = useState<CostumerServiceDatabase | null>(null);
   const [costumerServiceList, setCostumerServiceList] = useState<any>([]);
 
   const costumerServiceDatabase = useCostumerServiceDatabase();
 
+  useEffect (() => {
+    onReloadCostumerServiceList();
+  }, [filterDate]);
   async function onReloadCostumerServiceList() {
-    const today = new Date();
-    const localDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const costumerServiceList = await costumerServiceDatabase.findByDate(
-      localDate
+      filterDate
     );
     setCostumerServiceList(costumerServiceList);
   }
@@ -46,7 +50,8 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
         costumerServiceList,
         onReloadCostumerServiceList,
         costumerServiceSelected,
-        setCostumerServiceSelected
+        setCostumerServiceSelected,
+        setFilterDate
       }}
     >
       {children}
