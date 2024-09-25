@@ -44,7 +44,18 @@ export function CostumerServiceCreate(props:
         } ?? defaultFormValues
     });
 
-
+    async function isServiceDateAndTime(date: string, time: string, id: number) {
+        try {
+            setInProcess(true);
+            const response = await costumerServiceDatabase.findByDateAndTime(date, time, id);
+            setInProcess(false);
+            return (response.length > 0)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setInProcess(false);
+        }
+    }
 
     async function handleRemove() {
         if (!costumerService) {
@@ -72,12 +83,42 @@ export function CostumerServiceCreate(props:
     }
 
 
-    const onSubmit = (data: Form) => {
-        if (isEditing) {
-            update(data);
+    async function onSubmit(data: Form) {
+        const isServiceDateAndTimeExists = await isServiceDateAndTime(
+            data.schedulingDate,
+            data.schedulingTime,
+            costumerService?.id ?? 0
+        );
+        if (!isServiceDateAndTimeExists) {
+            if (isEditing) {
+                update(data);
+                return;
+            }
+            create(data);
             return;
         }
-        create(data);
+        Alert.alert(
+            "Confirmar",
+            "Já existe um agendamento para este horário, deseja continuar?",
+            [
+                {
+                    text: "Não",
+                    onPress: () => console.log("cancelada"),
+                    style: "cancel"
+                },
+                {
+                    text: "Sim",
+                    onPress: async () => {
+                        if (isEditing) {
+                            update(data);
+                            return;
+                        }
+                        create(data);
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     };
     async function create(data: Form) {
         setInProcess(true);
@@ -101,6 +142,8 @@ export function CostumerServiceCreate(props:
             setInProcess(false);
         } catch (error) {
             console.log(error);
+        } finally {
+            setInProcess(false);
         }
     }
     async function update(data: Form) {
@@ -129,6 +172,8 @@ export function CostumerServiceCreate(props:
             setInProcess(false);
         } catch (error) {
             console.log(error);
+        } finally {
+            setInProcess(false);
         }
     }
     async function onRemove() {
@@ -150,9 +195,10 @@ export function CostumerServiceCreate(props:
             setInProcess(false);
         } catch (error) {
             console.log(error);
+        } finally {
+            setInProcess(false);
         }
     }
-
     async function handleCancelEdit() {
         setAlowEditEdit(false);
         reset({

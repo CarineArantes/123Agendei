@@ -109,7 +109,6 @@ export function useCostumerServiceDatabase() {
   async function findByDate(schedulingDate: string) {
     try {
       const query = "SELECT * FROM costumerService WHERE schedulingDate = ? ORDER BY schedulingTime ASC";
-      // const query = "SELECT * FROM costumerService ORDER BY schedulingTime ASC";
       const response = await database.getAllAsync<CostumerServiceDatabase[]>(query, [schedulingDate]);
       console.log(response);
       return response;
@@ -120,7 +119,19 @@ export function useCostumerServiceDatabase() {
     }
   }
 
+  async function findByDateAndTime(schedulingDate: string, schedulingTime: string, id: number) {
+    try {
+      const query = "SELECT * FROM costumerService WHERE schedulingDate = ? AND schedulingTime = ? AND id != ? ORDER BY schedulingTime ASC";
+      const response = await database.getAllAsync<CostumerServiceDatabase[]>(query, [schedulingDate, schedulingTime, id]);
+      console.log(response);
+      return response;
+
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 
 
-  return { create, update, remove, show, findByDate }
+  return { create, update, remove, show, findByDate, findByDateAndTime }
 }
