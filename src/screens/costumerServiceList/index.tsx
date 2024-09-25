@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#C084FC',
         marginBottom: 15,
     },
     card: {
@@ -184,16 +184,16 @@ const styles = StyleSheet.create({
     clientName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#C084FC',
         marginBottom: 4,  // Espaçamento entre o nome e o tipo de serviço
     },
     serviceType: {
         fontSize: 16,
-        color: '#555',
+        color: '#C084FC',
     },
     schedulingTime: {
         fontSize: 22,  // Fonte maior para a hora
-        color: '#333',
+        color: '#C084FC',
         textAlign: 'right',  // Alinha à direita
         fontWeight: 'bold',  // Destaca o horário
         alignSelf: 'center',  // Centraliza verticalmente

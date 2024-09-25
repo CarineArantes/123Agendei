@@ -312,7 +312,7 @@ export function CostumerServiceCreate(props:
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={styles.submitButton}
+                                style={styles.submitDelete}
                                 onPress={() => handleRemove()}
                             >
                                 <Text style={styles.buttonText}>Excluir</Text>
@@ -367,6 +367,13 @@ const styles = StyleSheet.create({
     },
     submitButton: {
         backgroundColor: '#007BFF', // Azul
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    submitDelete: {
+        backgroundColor: '#ff004c', // Azul
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
