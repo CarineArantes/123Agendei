@@ -32,8 +32,10 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   const costumerServiceDatabase = useCostumerServiceDatabase();
 
   async function onReloadCostumerServiceList() {
+    const today = new Date();
+    const localDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
     const costumerServiceList = await costumerServiceDatabase.findByDate(
-      new Date().toISOString().split('T')[0]
+      localDate
     );
     setCostumerServiceList(costumerServiceList);
   }
@@ -41,7 +43,7 @@ const ConfigProvider = ({ children }: ConfigProviderProps) => {
   return (
     <ConfigContext.Provider
       value={{
-        costumerServiceList, 
+        costumerServiceList,
         onReloadCostumerServiceList,
         costumerServiceSelected,
         setCostumerServiceSelected

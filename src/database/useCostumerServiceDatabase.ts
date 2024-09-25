@@ -110,7 +110,6 @@ export function useCostumerServiceDatabase() {
     try {
       const query = "SELECT * FROM costumerService WHERE schedulingDate = ? ORDER BY schedulingTime ASC";
       const response = await database.getAllAsync<CostumerServiceDatabase[]>(query, [schedulingDate]);
-      console.log(response);
       return response;
 
     } catch (error) {
