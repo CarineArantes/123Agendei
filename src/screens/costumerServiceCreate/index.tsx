@@ -38,11 +38,18 @@ export function CostumerServiceCreate(props:
         formState: { errors }
     } = useForm<Form>({
         resolver: zodResolver(FormSchema),
-        defaultValues: {
-            ...costumerService,
-            schedulingDate: formattedDate(costumerService?.schedulingDate) ?? defaultFormValues.schedulingDate,
-        } ?? defaultFormValues
+        defaultValues: defaultFormValues
     });
+
+
+    useEffect(() => {
+        if (costumerService) {
+            reset({
+                ...costumerService,
+                schedulingDate: formattedDate(costumerService?.schedulingDate) ?? defaultFormValues.schedulingDate,
+            });
+        }
+    }, [costumerService, reset]);
 
     async function isServiceDateAndTime(date: string, time: string, id: number) {
         try {
@@ -81,7 +88,6 @@ export function CostumerServiceCreate(props:
             { cancelable: false }
         );
     }
-
 
     async function onSubmit(data: Form) {
         const isServiceDateAndTimeExists = await isServiceDateAndTime(
