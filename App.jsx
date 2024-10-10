@@ -1,12 +1,16 @@
+import { SQLiteProvider } from "expo-sqlite"
 import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import { AppProvider } from './src/contexts';
 import { Routes } from './src/routes';
+import { initializeDatabase } from './src/database/initializeDatabase';
 
 export default function App() {
   return (
-    <View className=" bg-red-400 flex-1 text-center justify-center">
-      <Routes />
-      <StatusBar style="auto" />
-    </View>
+    <SQLiteProvider databaseName="123Agendei.db" onInit={initializeDatabase}>
+      <AppProvider>
+        <Routes />
+        <StatusBar style="auto" />
+      </AppProvider>
+    </SQLiteProvider>
   );
 }
