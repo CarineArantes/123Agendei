@@ -1,13 +1,11 @@
-import { View, Text } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text } from 'react-native'
 
 export function CostumerService() {
 
-
     return (
-        <View className=" flex-1 bg-red-500" >
-            <Text>
-                HOME
-            </Text>
-        </View>
+        <SafeAreaView className=" flex-1">
+            <Text> CostumerService </Text>
+        </SafeAreaView>
     )
 }
