@@ -1,12 +1,13 @@
-import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
     Home,
     CostumerService,
+    CreateCostumerService,
     Services,
     Employees
 } from '../screens';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,23 +19,32 @@ export function TabRoutes() {
                 headerShown: false,
                 tabBarStyle: {
                     backgroundColor: '#C084FC',
+                    height: 60,
+                    paddingBottom: 10,
+                },
+                tabBarItemStyle: {
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    justifyContent: 'center', // Centraliza os ícones verticalmente
-                    height: 60, // Aumenta a altura para dar mais espaço
                 },
                 tabBarIconStyle: {
-                    justifyContent: 'center', // Centraliza o ícone horizontalmente
-                    alignItems: 'center', // Centraliza o ícone horizontalmente
-                }
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                },
             }}
         >
             <Tab.Screen
                 name="Home"
                 component={Home}
                 options={{
-                    tabBarLabel: '', // Oculta o nome da aba
-                    tabBarIcon: ({ color, size }) => (
-                        <FontAwesome5 name="home" color={color} size={size} />
+                    tabBarLabel: '',
+                    tabBarIcon: ({ size }) => (
+                        <View>
+                            <FontAwesome5
+                                name="home"
+                                color={'#ffffff'}
+                                size={size}
+                            />
+                        </View>
                     )
                 }}
             />
@@ -42,9 +52,32 @@ export function TabRoutes() {
                 name="CostumerService"
                 component={CostumerService}
                 options={{
-                    tabBarLabel: '', // Oculta o nome da aba
-                    tabBarIcon: ({ color, size }) => (
-                        <FontAwesome5 name="headset" color={color} size={size} />
+                    tabBarLabel: '',
+                    tabBarIcon: ({ size }) => (
+                        <View>
+                            <FontAwesome5
+                                name="headset"
+                                color={'#ffffff'}
+                                size={size}
+                            />
+                        </View>
+                    )
+                }}
+            />
+
+            <Tab.Screen
+                name='CreateCostumerService'
+                component={CreateCostumerService}
+                options={{
+                    tabBarLabel: '',
+                    tabBarIcon: ({ size }) => (
+                        <View className=" bg-white  w-14 h-14 -top-2 justify-center items-center rounded-full" >
+                            <FontAwesome5
+                                name="calendar-plus"
+                                color={'#539DF3'}
+                                size={size}
+                            />
+                        </View>
                     )
                 }}
             />
@@ -52,9 +85,15 @@ export function TabRoutes() {
                 name="Services"
                 component={Services}
                 options={{
-                    tabBarLabel: '', // Oculta o nome da aba
-                    tabBarIcon: ({ color, size }) => (
-                        <FontAwesome5 name="toolbox" color={color} size={size} />
+                    tabBarLabel: '',
+                    tabBarIcon: ({ size }) => (
+                        <View>
+                            <FontAwesome5
+                                name="toolbox"
+                                color={'#ffffff'}
+                                size={size}
+                            />
+                        </View>
                     )
                 }}
             />
@@ -62,9 +101,15 @@ export function TabRoutes() {
                 name="Employees"
                 component={Employees}
                 options={{
-                    tabBarLabel: '', // Oculta o nome da aba
-                    tabBarIcon: ({ color, size }) => (
-                        <FontAwesome5 name="users" color={color} size={size} />
+                    tabBarLabel: '',
+                    tabBarIcon: ({ size }) => (
+                        <View>
+                            <FontAwesome5
+                                name="users"
+                                color={'#ffffff'}
+                                size={size}
+                            />
+                        </View>
                     )
                 }}
             />
