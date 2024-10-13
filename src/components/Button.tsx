@@ -1,6 +1,7 @@
-import { cva } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import { Text, TouchableOpacity } from 'react-native';
-import { cn } from '../lib/utils';
+
+import { cn } from '../lib'
 
 const buttonVariants = cva(
   'flex flex-row items-center justify-center rounded-md',
@@ -47,6 +48,12 @@ const buttonTextVariants = cva('text-center font-medium', {
   },
 });
 
+interface ButtonProps
+  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity>,
+    VariantProps<typeof buttonVariants> {
+  label: string;
+  labelClasses?: string;
+}
 function Button({
   label,
   labelClasses,
@@ -54,7 +61,7 @@ function Button({
   variant,
   size,
   ...props
-}) {
+}: ButtonProps) {
   return (
     <TouchableOpacity
       className={cn(buttonVariants({ variant, size, className }))}
