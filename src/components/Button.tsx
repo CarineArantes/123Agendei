@@ -64,14 +64,10 @@ function Button({
 }: ButtonProps) {
   return (
     <TouchableOpacity
-      className={cn(buttonVariants({ variant, size, className }))}
+      className="w-full bg-colorBase h-12 rounded-xl items-center justify-center"
       {...props}
     >
-      <Text
-        className={cn(
-          buttonTextVariants({ variant, size, className: labelClasses })
-        )}
-      >
+      <Text className=' text-lg text-white font-bold'>
         {label}
       </Text>
     </TouchableOpacity>

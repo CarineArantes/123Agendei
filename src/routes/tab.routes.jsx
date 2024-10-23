@@ -1,7 +1,7 @@
 import { Pressable } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Modal } from '../components';
 import {
     Home,
@@ -11,11 +11,21 @@ import {
     Employees
 } from '../screens';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useConfig } from '../contexts/config';
 
 const Tab = createBottomTabNavigator();
 
 export function TabRoutes() {
-    const [modalVisible, setModalVisible] = useState(false);
+
+    const { itemSelected, handleModalVisible, modalVisible } = useConfig();
+
+    const titleModal = useMemo(() => {
+        const refName = itemSelected?.servedAt ? 'Atendimento' : 'Agendamento';
+        if (itemSelected) {
+            return itemSelected?.preview ? refName : `Editar ${refName}`
+        }
+        return `Novo ${refName}`
+    }, [itemSelected])
 
     return (
         <>
@@ -76,7 +86,7 @@ export function TabRoutes() {
                         tabBarIcon: ({ size }) => (
                             <Pressable
                                 className=" bg-white  w-14 h-14 -top-2 justify-center items-center rounded-full"
-                                onPress={() => setModalVisible(true)}
+                                onPress={() => handleModalVisible(true)}
                             >
                                 <FontAwesome5
                                     name="calendar-plus"
@@ -117,12 +127,17 @@ export function TabRoutes() {
                 />
             </Tab.Navigator>
             <Modal
+                title={titleModal}
                 visible={modalVisible}
                 transparent={false}
                 animationType="slide"
-                onRequestClose={() => setModalVisible(false)}
+                onRequestClose={() => handleModalVisible(false)}
             >
-                <CreateCostumerService />
+                {modalVisible &&
+                    <CreateCostumerService
+                        item={itemSelected}
+                    />
+                }
             </Modal>
         </>
     );
